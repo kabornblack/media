@@ -1,72 +1,7 @@
-#[derive(Debug)]
-enum Media {
-    Book { title: String, author: String },
-    Movie { title: String, director: String },
-    Audiobook { title: String },
-    Podcast(u32),
-    Placeholder,
-}
+mod content;
 
-impl Media {
-    fn description(&self) -> String {
-        // if let Media::Book { title, author } = self {
-        //     format!("Book: {} {}", title, author)
-        // } else if let Media::Movie { title, director } = self {
-        //     format!("Movie: {} {}", title, director)
-        // } else if let Media::Audiobook { title } = self {
-        //     format!("Audiobook: {}", title)
-        // } else {
-        //     String::from("Media description")
-        // }
-
-        match self {
-            Media::Book { title, author } => {
-                format!("Book: {} {}", title, author)
-            }
-            Media::Movie { title, director } => {
-                format!("Movie: {} {}", title, director)
-            }
-            Media::Audiobook { title } => {
-                format!("Audiobook: {}", title)
-            }
-            Media::Podcast(id) => {
-                format!("Podcast: {}", id)
-            }
-            Media::Placeholder => {
-                format!("Placeholder")
-            }
-        }
-    }
-}
-
-#[derive(Debug)]
-struct Catalog {
-    items: Vec<Media>,
-}
-
-impl Catalog {
-    fn new() -> Self {
-        Catalog { items: vec![] }
-    }
-
-    fn add(&mut self, media: Media) {
-        self.items.push(media);
-    }
-
-    fn get_by_index(&self, index: usize) -> Option<&Media> {
-        if self.items.len() > index {
-            // Good! We have somethign to return
-            Some(&self.items[index])
-        } else {
-            // Bad! We don't have anything to return!!!
-            None
-        }
-    }
-}
-
-fn print_media(media: Media) {
-    println!("{:#?}", media);
-}
+use content::catalog::Catalog;
+use content::media::Media;
 
 fn main() {
     let audiobook = Media::Audiobook {
@@ -80,7 +15,7 @@ fn main() {
         title: String::from("Bad Book"),
         author: String::from("Bad Author"),
     };
-    let podcast = Media::Podcast(10);
+    let podcast = Media::Podcast(0);
     let placeholder = Media::Placeholder;
 
     // println!("{}", audiobook.description());
@@ -95,22 +30,8 @@ fn main() {
     catalog.add(podcast);
     catalog.add(placeholder);
 
-    // let item = catalog.get_by_index(40);
+    let item = catalog.get_by_index(40);
+    let placeholder = Media::Placeholder;
 
-    // println!("{:#?}", item);
-
-    match catalog.get_by_index(1) {
-        Some(value) => {
-            println!("Item: {:#?}", value);
-        }
-        None => {
-            println!("No value here!");
-        }
-    }
-
-    // if let Some(value) = catalog.get_by_index(0) {
-    //     println!("Item in pattern match: {:#?}", value)
-    // } else {
-    //     println!("No value!!!!!!!!!!");
-    // }
+    println!("{:#?}", item.unwrap_or(&placeholder));
 }
